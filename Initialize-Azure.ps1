@@ -17,10 +17,10 @@ process {
     $keyVault = New-AzKeyVault -Name $VaultName -ResourceGroupName "rg-infrastructure" -Location $Location
 
     $app = New-AzADApplication -DisplayName "Azure Infrastructure Automation" -HomePage "https://app.terraform.io/" -IdentifierUris "https://app.terraform.io/"
-    $servicePrincipal = New-AzADServicePrincipal -Role Contributor -Scope $Scope -DisplayName "Terraform Cloud ARM Connector" -ApplicationObject $app
-    $secret = Set-AzKeyVaultSecret -Name "terraform-cloud-arm-connector-secret" -VaultName $VaultName -SecretValue $servicePrincipal.Secret
+    $servicePrincipal = New-AzADServicePrincipal -Role Contributor -Scope $Scope -DisplayName "Infrastructure Automation ARM Connector" -ApplicationObject $app
+    $secret = Set-AzKeyVaultSecret -Name "infrastructure-automation-arm-connector-secret" -VaultName $VaultName -SecretValue $servicePrincipal.Secret
 
-    Write-Host "Terraform Cloud ARM Connector:"
+    Write-Host "Infrastructure Automation ARM Connector:"
     Write-Host "ObjectId: $($servicePrincipal.Id)"
     Write-Host "ApplicationId: $($servicePrincipal.ApplicationId)"
     Write-Host "Secret: $($secret.Name)"
