@@ -1,3 +1,4 @@
+#Run in Powershell 5.1
 #Install-Module AzureAD
 #Import-Module
 #Connect-AzureAD
