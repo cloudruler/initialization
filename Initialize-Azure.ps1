@@ -12,6 +12,9 @@ param(
     $VaultName = "kvcloudrulerinfra",
     [Parameter(Mandatory=$false)]
     [string]
+    $StorageAccountName = "cloudrulerinfra",
+    [Parameter(Mandatory=$false)]
+    [string]
     $Location = "South Central US"
 )
 process {
@@ -22,6 +25,7 @@ process {
     New-AzResourceGroup -Name $rgName -Location $Location
     Write-Host "Creating Key Vault $VaultName"
     New-AzKeyVault -Name $VaultName -ResourceGroupName $rgName -Location $Location
+    New-AzStorageAccount -AccountName $StorageAccountName -ResourceGroupName $rgName -Location $Location -SkuName Standard_LRS -Kind StorageV2 -AccessTier Cold -EnableHttpsTrafficOnly
 
     Write-Host "Looking up Enterprise Application"
     $app = Get-AzAdApplication -IdentifierUri "https://azureinfrastructureautomation.cloudruler.io/"
@@ -40,7 +44,7 @@ process {
     Write-Host "ObjectId: $($servicePrincipal.Id)"
     Write-Host "ApplicationId: $($servicePrincipal.ApplicationId)"
     Write-Host "Secret: $($newSecretObj.Name)"
-
+    
 }
 
 
