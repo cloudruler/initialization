@@ -9,24 +9,29 @@ param(
     $Scope = "/subscriptions/00000000-0000-0000-0000-000000000000",
     [Parameter(Mandatory=$false)]
     [string]
-    $VaultName = "kvcloudrulerinfra",
+    $VaultName = "cloudruler",
     [Parameter(Mandatory=$false)]
     [string]
-    $StorageAccountName = "cloudrulerinfra",
+    $StorageAccountName = "cloudruler",
+    [Parameter(Mandatory=$false)]
+    [string]
+    $BlobContainerName = "tfstates",
     [Parameter(Mandatory=$false)]
     [string]
     $Location = "South Central US"
 )
 process {
 
-    $rgName = "rg-infrastructure";
+    $rgName = "rg-identity";
     #Initialize the tenant
     Write-Host "Creating Resource Group $rgName"
     New-AzResourceGroup -Name $rgName -Location $Location
     Write-Host "Creating Key Vault $VaultName"
     New-AzKeyVault -Name $VaultName -ResourceGroupName $rgName -Location $Location
-    New-AzStorageAccount -AccountName $StorageAccountName -ResourceGroupName $rgName -Location $Location -SkuName Standard_LRS -Kind StorageV2 -AccessTier Cold -EnableHttpsTrafficOnly
 
+    $stgContext = New-AzStorageAccount -AccountName $StorageAccountName -ResourceGroupName $rgName -Location $Location -SkuName Standard_LRS -Kind StorageV2 -AccessTier Hot -EnableHttpsTrafficOnly $true -MinimumTlsVersion TLS1_2
+    New-AzStorageContainer -Name "tfstates" -Context $stgContext.Context -Permission Blob
+    
     Write-Host "Looking up Enterprise Application"
     $app = Get-AzAdApplication -IdentifierUri "https://azureinfrastructureautomation.cloudruler.io/"
     if($null -eq $app) {
