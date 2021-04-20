@@ -1,3 +1,12 @@
+Instructions for setting up remote docker SSH.
+Add the SSH user to the docker group to get privileges
+Shouldn't need to configure the docker daemon over any ports or anything
+Start the ssh-agent
+ssh-add
+ssh-add -ls
+
+on the VM, install docker. install azure cli
+
 # Introduction 
 For initial environment setup
 
